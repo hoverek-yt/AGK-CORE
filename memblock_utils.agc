@@ -19,8 +19,8 @@ function EnsureMemblockCapacity(memblock as integer, minCapacity as integer)
 
     // Grow strategy: double or minCapacity
     local newSize as integer : newSize = oldSize * 2
-    if newSize < minCapacity then newSize = minCapacity endif
-    if newSize = 0 then newSize = minCapacity endif
+    if newSize < minCapacity then newSize = minCapacity
+    if newSize = 0 then newSize = minCapacity
 
     ResizeMemblock(memblock, newSize)
 endfunction
@@ -63,8 +63,8 @@ endfunction
 function InsertMemblockRawValue(memblock as integer, offset as integer, size as integer)
     local oldSize as integer : oldSize = GetMemblockSize(memblock)
     if size <= 0 then exitfunction
-    if offset < 0 then offset = 0 endif
-    if offset > oldSize then offset = oldSize endif
+    if offset < 0 then offset = 0
+    if offset > oldSize then offset = oldSize
 
     local newSize as integer : newSize = oldSize + size
 
@@ -97,10 +97,10 @@ endfunction
 function RemoveMemblockRawValue(memblock as integer, offset as integer, size as integer)
     local oldSize as integer : oldSize = GetMemblockSize(memblock)
     if size <= 0 then exitfunction
-    if offset < 0 then offset = 0 endif
+    if offset < 0 then offset = 0
     if offset >= oldSize then exitfunction
 
-    if offset + size > oldSize then size = oldSize - offset endif
+    if offset + size > oldSize then size = oldSize - offset
 
     local newSize as integer : newSize = oldSize - size
     local temp as integer : temp = CreateMemblock(newSize)
@@ -131,19 +131,19 @@ function ReplaceMemblockRawValue(memblock as integer, offset as integer, oldRang
     InsertMemblockRawValue(memblock, offset, newRangeSize)
 endfunction
 
-// Slice: zwraca nowy memblock z kopią zakresu
+// Slice: returns new memblock with copy of range
 function SliceMemblock(memblock as integer, offset as integer, size as integer)
     local oldSize as integer : oldSize = GetMemblockSize(memblock)
     if size <= 0 then exitfunction -1
-    if offset < 0 then offset = 0 endif
-    if offset + size > oldSize then size = oldSize - offset endif
+    if offset < 0 then offset = 0
+    if offset + size > oldSize then size = oldSize - offset
 
     local result as integer : result = CreateMemblock(size)
     if size > 0
         CopyMemblock(memblock, result, offset, 0, size)
     endif
     exitfunction result
-endfunction
+endfunction 0
 
 // Append entire memB to memA
 function AppendMemblock(memA as integer, memB as integer)
@@ -187,85 +187,85 @@ endfunction
 // Find a single byte from start offset; returns index or -1
 function FindMemblockByte(memblock as integer, value as integer, startOffset as integer)
     local size as integer : size = GetMemblockSize(memblock)
-    if startOffset < 0 then startOffset = 0 endif
+    if startOffset < 0 then startOffset = 0
     for i = startOffset to size - 1
-        if GetMemblockByte(memblock, i) = value then exitfunction i endif
+        if GetMemblockByte(memblock, i) = value then exitfunction i
     next i
     exitfunction -1
-endfunction
+endfunction 0
 
 // Find sequence (simple naive algorithm), returns index or -1
 function FindMemblockSequence(memblock as integer, seqMem as integer, startOffset as integer)
     local size as integer : size = GetMemblockSize(memblock)
     local seqSize as integer : seqSize = GetMemblockSize(seqMem)
     if seqSize <= 0 then exitfunction -1
-    if startOffset < 0 then startOffset = 0 endif
+    if startOffset < 0 then startOffset = 0
 
     for i = startOffset to size - seqSize
         local match as integer : match = 1
         for j = 0 to seqSize - 1
             if GetMemblockByte(memblock, i + j) <> GetMemblockByte(seqMem, j)
                 match = 0
-                exitfor
+                exit
             endif
         next j
-        if match = 1 then exitfunction i endif
+        if match = 1 then exitfunction i
     next i
     exitfunction -1
-endfunction
+endfunction 0
 
 // -----------------------------
 // Safe getters (bounds-checked)
 // -----------------------------
 function GetMemblockByteSafe(memblock as integer, offset as integer)
-    if offset < 0 then exitfunction 0 endif
-    if offset + 1 > GetMemblockSize(memblock) then exitfunction 0 endif
+    if offset < 0 then exitfunction 0
+    if offset + 1 > GetMemblockSize(memblock) then exitfunction 0
     exitfunction GetMemblockByte(memblock, offset)
-endfunction
+endfunction 0
 
 function GetMemblockByteSignedSafe(memblock as integer, offset as integer)
-    if offset < 0 then exitfunction 0 endif
-    if offset + 1 > GetMemblockSize(memblock) then exitfunction 0 endif
+    if offset < 0 then exitfunction 0
+    if offset + 1 > GetMemblockSize(memblock) then exitfunction 0
     exitfunction GetMemblockByteSigned(memblock, offset)
-endfunction
+endfunction 0
 
 function GetMemblockShortSafe(memblock as integer, offset as integer)
-    if offset < 0 then exitfunction 0 endif
-    if offset + 2 > GetMemblockSize(memblock) then exitfunction 0 endif
+    if offset < 0 then exitfunction 0
+    if offset + 2 > GetMemblockSize(memblock) then exitfunction 0
     exitfunction GetMemblockShort(memblock, offset)
-endfunction
+endfunction 0
 
 function GetMemblockIntSafe(memblock as integer, offset as integer)
-    if offset < 0 then exitfunction 0 endif
-    if offset + 4 > GetMemblockSize(memblock) then exitfunction 0 endif
+    if offset < 0 then exitfunction 0
+    if offset + 4 > GetMemblockSize(memblock) then exitfunction 0
     exitfunction GetMemblockInt(memblock, offset)
-endfunction
+endfunction 0
 
 function GetMemblockFloatSafe(memblock as integer, offset as integer)
-    if offset < 0 then exitfunction 0.0 endif
-    if offset + 4 > GetMemblockSize(memblock) then exitfunction 0.0 endif
+    if offset < 0 then exitfunction 0.0
+    if offset + 4 > GetMemblockSize(memblock) then exitfunction 0.0
     exitfunction GetMemblockFloat(memblock, offset)
-endfunction
+endfunction 0
 
 function GetMemblockStringSafe(memblock as integer, offset as integer, length as integer)
-    if length <= 0 then exitfunction "" endif
-    if offset < 0 then exitfunction "" endif
-    if offset + length > GetMemblockSize(memblock) then exitfunction "" endif
+    if length <= 0 then exitfunction ""
+    if offset < 0 then exitfunction ""
+    if offset + length > GetMemblockSize(memblock) then exitfunction ""
     exitfunction GetMemblockString(memblock, offset, length)
-endfunction
+endfunction ""
 
 function GetMemblockStringSmartSafe(memblock as integer, offset as integer)
     // [int length][bytes][00] or [int length][bytes]
     local memSize as integer : memSize = GetMemblockSize(memblock)
-    if offset < 0 then exitfunction "" endif
-    if offset + 4 > memSize then exitfunction "" endif
+    if offset < 0 then exitfunction ""
+    if offset + 4 > memSize then exitfunction ""
 
     local strLen as integer : strLen = GetMemblockInt(memblock, offset)
-    if strLen < 0 then exitfunction "" endif
-    if offset + 4 + strLen > memSize then exitfunction "" endif
+    if strLen < 0 then exitfunction ""
+    if offset + 4 + strLen > memSize then exitfunction ""
 
     exitfunction GetMemblockString(memblock, offset + 4, strLen)
-endfunction
+endfunction ""
 
 // -----------------------------
 // Typed Add / Insert / Remove / Replace / Read helpers
@@ -288,8 +288,8 @@ endfunction
 
 function ReplaceMemblockByte(memblock as integer, offset as integer, value as integer)
     // overwrite existing byte
-    if offset < 0 then exitfunction endif
-    if offset + SIZE_BYTE > GetMemblockSize(memblock) then exitfunction endif
+    if offset < 0 then exitfunction
+    if offset + SIZE_BYTE > GetMemblockSize(memblock) then exitfunction
     SetMemblockByte(memblock, offset, value)
 endfunction
 
@@ -310,8 +310,8 @@ function RemoveMemblockByteSigned(memblock as integer, offset as integer)
 endfunction
 
 function ReplaceMemblockByteSigned(memblock as integer, offset as integer, value as integer)
-    if offset < 0 then exitfunction endif
-    if offset + SIZE_BYTE > GetMemblockSize(memblock) then exitfunction endif
+    if offset < 0 then exitfunction
+    if offset + SIZE_BYTE > GetMemblockSize(memblock) then exitfunction
     SetMemblockByteSigned(memblock, offset, value)
 endfunction
 
@@ -332,8 +332,8 @@ function RemoveMemblockShort(memblock as integer, offset as integer)
 endfunction
 
 function ReplaceMemblockShort(memblock as integer, offset as integer, value as integer)
-    if offset < 0 then exitfunction endif
-    if offset + SIZE_SHORT > GetMemblockSize(memblock) then exitfunction endif
+    if offset < 0 then exitfunction
+    if offset + SIZE_SHORT > GetMemblockSize(memblock) then exitfunction
     SetMemblockShort(memblock, offset, value)
 endfunction
 
@@ -354,8 +354,8 @@ function RemoveMemblockInt(memblock as integer, offset as integer)
 endfunction
 
 function ReplaceMemblockInt(memblock as integer, offset as integer, value as integer)
-    if offset < 0 then exitfunction endif
-    if offset + SIZE_INT > GetMemblockSize(memblock) then exitfunction endif
+    if offset < 0 then exitfunction
+    if offset + SIZE_INT > GetMemblockSize(memblock) then exitfunction
     SetMemblockInt(memblock, offset, value)
 endfunction
 
@@ -376,8 +376,8 @@ function RemoveMemblockFloat(memblock as integer, offset as integer)
 endfunction
 
 function ReplaceMemblockFloat(memblock as integer, offset as integer, value as float)
-    if offset < 0 then exitfunction endif
-    if offset + SIZE_FLOAT > GetMemblockSize(memblock) then exitfunction endif
+    if offset < 0 then exitfunction
+    if offset + SIZE_FLOAT > GetMemblockSize(memblock) then exitfunction
     SetMemblockFloat(memblock, offset, value)
 endfunction
 
@@ -398,7 +398,7 @@ function InsertMemblockString(memblock as integer, offset as integer, value as s
 endfunction
 
 function RemoveMemblockString(memblock as integer, offset as integer, length as integer)
-    if length < 0 then exitfunction endif
+    if length < 0 then exitfunction
     RemoveMemblockRawValue(memblock, offset, length + 1)
 endfunction
 
@@ -429,14 +429,14 @@ endfunction
 
 function RemoveMemblockStringSmart(memblock as integer, offset as integer)
     local strLen as integer : strLen = GetMemblockInt(memblock, offset)
-    if strLen < 0 then exitfunction endif
+    if strLen < 0 then exitfunction
     local total as integer : total = SIZE_INT + strLen + 1
     RemoveMemblockRawValue(memblock, offset, total)
 endfunction
 
 function ReplaceMemblockStringSmart(memblock as integer, offset as integer, newValue as string)
     local oldLen as integer : oldLen = GetMemblockInt(memblock, offset)
-    if oldLen < 0 then exitfunction endif
+    if oldLen < 0 then exitfunction
     local newLen as integer : newLen = ByteLen(newValue)
     ReplaceMemblockRawValue(memblock, offset, SIZE_INT + oldLen + 1, SIZE_INT + newLen + 1)
     SetMemblockInt(memblock, offset, newLen)
